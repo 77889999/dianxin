@@ -1,9 +1,10 @@
 {
-  "name": "chinatelecom-sign",
+  "name": "dianxin-sign",
   "version": "1.0.0",
   "dependencies": {
     "xmldom": "^0.6.0",
     "node-rsa": "1.1.1",
-    "crypto-js": "^4.2.0"
+    "crypto-js": "^4.2.0",
+    "got": "^11.8.6"
   }
 }
