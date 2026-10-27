@@ -2507,7 +2507,7 @@
           return;
         }
         if (!this.notifyFlag) return;
-        var _0x5b49dd = require("./sendNotify");
+       var _0x5b49dd = require("./结果推送.js");
   
         const originalBarkGroup = process.env.BARK_GROUP;
         const originalBarkIcon = process.env.BARK_ICON;
