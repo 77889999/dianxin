@@ -1,7 +1,7 @@
 name: 电信营业厅每日签到
 on:
   schedule:
-    # 每天北京时间 8:00 自动执行（对应 UTC 0:00），可自行修改时间
+    # 每天北京时间 8:00 自动执行（UTC 0:00），可自行修改
     - cron: '0 0 * * *'
   workflow_dispatch:
 
@@ -17,15 +17,25 @@ jobs:
         with:
           node-version: '18'
 
+      # 缓存登录凭证，减少重复登录，降低风控概率
+      - name: 恢复缓存文件
+        uses: actions/cache@v4
+        with:
+          path: chinaTelecom_cache.json
+          key: telecom-cache-${{ github.run_id }}
+          restore-keys: |
+            telecom-cache-
+
       - name: 安装脚本依赖
         run: npm install
 
       - name: 执行签到脚本
         env:
-          # 账号配置：环境变量名必须和脚本内读取的名称一致，不可修改
+          # 账号配置，变量名和脚本内严格对应，不可修改
           chinaTelecomAccount: ${{ secrets.CHINA_TELECOM_ACCOUNT }}
-          # 以下为通知推送可选配置，按需添加，和青龙面板配置方式一致
+          # 可选：通知推送配置，按需添加
           BARK_PUSH: ${{ secrets.BARK_PUSH }}
           BARK_SOUND: ${{ secrets.BARK_SOUND }}
           SERVERCHAN_SCKEY: ${{ secrets.SERVERCHAN_SCKEY }}
+          PUSH_SWITCH: "1"
         run: node 脚本.js
