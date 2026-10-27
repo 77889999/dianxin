@@ -1,0 +1,33 @@
+name: 电信营业厅签到
+on:
+  schedule:
+    # 每天北京时间 8:00 执行（对应 UTC 0:00，可按需调整）
+    - cron: '0 0 * * *'
+  # 保留手动触发入口，方便测试
+  workflow_dispatch:
+
+jobs:
+  run-sign:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 拉取仓库代码
+        uses: actions/checkout@v4
+
+      - name: 配置 Node.js 环境
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: 安装脚本依赖
+        run: npm install
+
+      - name: 执行签到脚本
+        env:
+          # 账号配置，与青龙面板的环境变量名完全对应
+          chinaTelecomAccount: ${{ secrets.CHINA_TELECOM_ACCOUNT }}
+          # 以下为通知推送的环境变量，按需添加（和青龙配置方式一致）
+          BARK_PUSH: ${{ secrets.BARK_PUSH }}
+          BARK_SOUND: ${{ secrets.BARK_SOUND }}
+          SERVERCHAN_SCKEY: ${{ secrets.SERVERCHAN_SCKEY }}
+          # 其他 sendNotify 支持的推送渠道，按自身需求补充
+        run: node ChinaTelecomyyt.js
